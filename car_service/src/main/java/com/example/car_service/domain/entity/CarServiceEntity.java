@@ -26,7 +26,7 @@ public class CarServiceEntity {
     private CarEntity car;
 
     @ManyToOne
-    @JoinColumn(name = "service_center_id", nullable = false)
+    @JoinColumn(name = "service_center_id")
     private ServiceCenterEntity serviceCenter;
 
     @Column(name = "service_date", nullable = false)
