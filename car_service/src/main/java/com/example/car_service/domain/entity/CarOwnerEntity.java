@@ -12,23 +12,23 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "service_centers")
-public class ServiceCenterEntity {
+@Table(name = "car_owners")
+public class CarOwnerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false, updatable = false)
-    private UUID serviceCenterId;
+    @Column(name = "id")
+    private UUID ownerId;
 
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "address", nullable = false)
-    private String address;
+    @Column(name = "full_name", nullable = false)
+    private String fullName;
 
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "created_at")
     private ZonedDateTime createdAt;
 }
