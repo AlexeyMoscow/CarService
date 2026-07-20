@@ -4,8 +4,11 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -17,8 +20,11 @@ public class ServiceCenterEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id")
     private UUID serviceCenterId;
+
+    @OneToMany(mappedBy = "serviceCenter")
+    private List<CarServiceEntity> services;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -29,6 +35,11 @@ public class ServiceCenterEntity {
     @Column(name = "phone")
     private String phone;
 
+    @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private ZonedDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private ZonedDateTime updatedAt;
 }

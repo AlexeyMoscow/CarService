@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -29,6 +31,14 @@ public class CarOwnerEntity {
     @Column(name = "email")
     private String email;
 
-    @Column(name = "created_at")
-    private ZonedDateTime createdAt;
+    @OneToMany(mappedBy = "owner")
+    private List<CarEntity> cars;
+
+    @CreationTimestamp
+    @Column(name = "record_created_at")
+    private ZonedDateTime recordCreatedAt;
+
+    @CreationTimestamp
+    @Column(name = "record_updated_at")
+    private ZonedDateTime recordUpdatedAt;
 }

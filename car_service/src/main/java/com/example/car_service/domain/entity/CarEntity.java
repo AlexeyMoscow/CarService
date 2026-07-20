@@ -1,15 +1,20 @@
 package com.example.car_service.domain.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "cars")
@@ -17,8 +22,8 @@ public class CarEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false, updatable = false)
-    private UUID carId;
+    @Column(name = "id")
+    private UUID id;
 
     @Column(name = "vin", nullable = false, unique = true)
     private String vin;
@@ -30,7 +35,7 @@ public class CarEntity {
     private Integer year;
 
     @Column(name = "mileage", nullable = false)
-    private int mileage;
+    private Integer mileage;
 
     @Column(name = "manufacturer", nullable = false)
     private String manufacturer;
@@ -42,6 +47,14 @@ public class CarEntity {
     @JoinColumn(name = "owner_id", nullable = false)
     private CarOwnerEntity owner;
 
+    @OneToMany(mappedBy = "car")
+    private List<CarServiceEntity> services;
+
+    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private ZonedDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    private ZonedDateTime updatedAt;
 }
