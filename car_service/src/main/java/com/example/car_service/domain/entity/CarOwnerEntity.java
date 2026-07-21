@@ -20,7 +20,7 @@ public class CarOwnerEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private UUID ownerId;
+    private UUID id;
 
     @Column(name = "full_name", nullable = false)
     private String fullName;

@@ -55,6 +55,6 @@ public class CarEntity {
     private ZonedDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private ZonedDateTime updatedAt;
 }

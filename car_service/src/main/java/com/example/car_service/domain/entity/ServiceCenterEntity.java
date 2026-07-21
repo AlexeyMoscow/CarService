@@ -21,7 +21,7 @@ public class ServiceCenterEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
-    private UUID serviceCenterId;
+    private UUID id;
 
     @OneToMany(mappedBy = "serviceCenter")
     private List<CarServiceEntity> services;
@@ -40,6 +40,6 @@ public class ServiceCenterEntity {
     private ZonedDateTime createdAt;
 
     @UpdateTimestamp
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private ZonedDateTime updatedAt;
 }
