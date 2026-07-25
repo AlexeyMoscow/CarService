@@ -21,12 +21,12 @@ databaseChangeLog:
             splitStatements: true
             endDelimiter: ;
         - sqlFile:
-            path: dbscripts/2026_07_21_v1_car_service_table.sql
+            path: dbscripts/2026_07_21_v1_service_centers_table.sql
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ;
         - sqlFile:
-            path: dbscripts/2026_07_21_v1_service_centers_table.sql
+            path: dbscripts/2026_07_21_v1_car_service_table.sql
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ;
