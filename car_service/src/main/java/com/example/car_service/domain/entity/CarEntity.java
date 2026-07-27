@@ -50,6 +50,9 @@ public class CarEntity {
     @OneToMany(mappedBy = "car")
     private List<CarServiceEntity> services;
 
+    @Column(name = "comment")
+    private String comment;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private ZonedDateTime createdAt;

@@ -30,3 +30,13 @@ databaseChangeLog:
             relativeToChangelogFile: true
             splitStatements: true
             endDelimiter: ;
+
+  - changeSet:
+      id: 2026_07_27_v1_create_cars_table.sql
+      author: alexey
+      comment: "add comment to Car entity"
+      sqlFile:
+        path: dbscripts/2026_07_27_v1_create_cars_table.sql
+        relativeToChangelogFile: true
+        splitStatements: true
+        endDelimiter: ;

@@ -1,0 +1,2 @@
+ALTER TABLE cars
+    ADD COLUMN comment VARCHAR(1000);
