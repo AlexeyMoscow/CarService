@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +33,7 @@ public class CarOwnerEntity {
     private String email;
 
     @OneToMany(mappedBy = "owner")
-    private List<CarEntity> cars;
+    private List<CarEntity> cars = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "record_created_at")
