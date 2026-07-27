@@ -7,36 +7,44 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "service_centers")
-public class ServiceCenterEntity {
+@Table(name = "car_services")
+public class CarServiceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id")
     private UUID id;
 
-    @OneToMany(mappedBy = "serviceCenter")
-    private List<CarServiceEntity> services;
+    @ManyToOne
+    @JoinColumn(name = "car_id", nullable = false)
+    private CarEntity car;
 
-    @Column(name = "name", nullable = false)
-    private String name;
+    @ManyToOne
+    @JoinColumn(name = "service_center_id")
+    private ServiceCenterEntity serviceCenter;
 
-    @Column(name = "address", nullable = false)
-    private String address;
+    @Column(name = "service_date", nullable = false)
+    private ZonedDateTime serviceDate;
 
-    @Column(name = "phone")
-    private String phone;
+    @Column(name = "mileage")
+    private Integer mileage;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "cost")
+    private BigDecimal cost;
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at")
     private ZonedDateTime createdAt;
 
     @UpdateTimestamp
