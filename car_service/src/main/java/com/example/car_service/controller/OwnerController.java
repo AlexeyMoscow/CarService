@@ -1,8 +1,8 @@
 package com.example.car_service.controller;
 
-import com.example.car_service.domain.dto.car_owner.CarOwnerCreateRequest;
-import com.example.car_service.domain.dto.car_owner.CarOwnerCreateResponse;
-import com.example.car_service.service.CarOwnerService;
+import com.example.car_service.domain.dto.owner.OwnerCreateRequest;
+import com.example.car_service.domain.dto.owner.OwnerCreateResponse;
+import com.example.car_service.service.OwnerService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -14,19 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/car-owner")
-public class CarOwnerController {
+@RequestMapping("/api/v1/owners")
+public class OwnerController {
 
-    private final CarOwnerService carOwnerService;
+    private final OwnerService ownerService;
 
     @PostMapping
-    public ResponseEntity<CarOwnerCreateResponse> createCarOwner(
-           @RequestBody CarOwnerCreateRequest request
+    public ResponseEntity<OwnerCreateResponse> createOwner(
+           @RequestBody OwnerCreateRequest request
     ) {
 
-        CarOwnerCreateResponse carOwnerCreateResponse = carOwnerService.create(request);
+        OwnerCreateResponse ownerCreateResponse = ownerService.create(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(carOwnerCreateResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ownerCreateResponse);
 
     }
 

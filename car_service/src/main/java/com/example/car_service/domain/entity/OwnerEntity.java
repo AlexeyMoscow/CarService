@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "car_owners")
-public class CarOwnerEntity {
+public class OwnerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -39,7 +40,7 @@ public class CarOwnerEntity {
     @Column(name = "record_created_at")
     private ZonedDateTime recordCreatedAt;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     @Column(name = "record_updated_at")
     private ZonedDateTime recordUpdatedAt;
 }

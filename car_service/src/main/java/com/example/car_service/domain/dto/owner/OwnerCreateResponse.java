@@ -1,4 +1,4 @@
-package com.example.car_service.domain.dto.car_owner;
+package com.example.car_service.domain.dto.owner;
 
 import com.example.car_service.domain.entity.CarEntity;
 
@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
-public record CarOwnerCreateResponse(
+public record OwnerCreateResponse(
 
         UUID id,
 

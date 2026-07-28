@@ -1,8 +1,8 @@
-package com.example.car_service.domain.dto.car_owner;
+package com.example.car_service.domain.dto.owner;
 
 import jakarta.validation.constraints.Email;
 
-public record CarOwnerCreateRequest(
+public record OwnerCreateRequest(
         String fullName,
 
         String phone,

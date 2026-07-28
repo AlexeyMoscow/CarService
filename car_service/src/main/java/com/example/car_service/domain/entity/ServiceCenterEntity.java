@@ -24,7 +24,7 @@ public class ServiceCenterEntity {
     private UUID id;
 
     @OneToMany(mappedBy = "serviceCenter")
-    private List<CarServiceEntity> services;
+    private List<MaintenanceRecordEntity> services;
 
     @Column(name = "name", nullable = false)
     private String name;
