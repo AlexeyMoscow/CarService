@@ -1,7 +1,6 @@
 package com.example.car_service.service.impl;
 
 import com.example.car_service.domain.dto.owner.OwnerCreateRequest;
-import com.example.car_service.domain.dto.owner.OwnerRequest;
 import com.example.car_service.domain.dto.owner.OwnerResponse;
 import com.example.car_service.domain.dto.owner.OwnerUpdateRequest;
 import com.example.car_service.service.OwnerService;
