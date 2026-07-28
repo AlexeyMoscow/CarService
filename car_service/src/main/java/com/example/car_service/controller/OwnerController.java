@@ -2,10 +2,10 @@ package com.example.car_service.controller;
 
 import com.example.car_service.domain.dto.owner.OwnerCreateRequest;
 import com.example.car_service.domain.dto.owner.OwnerResponse;
+import com.example.car_service.domain.dto.owner.OwnerUpdateRequest;
 import com.example.car_service.service.OwnerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,6 +37,16 @@ public class OwnerController {
         OwnerResponse ownerResponse = ownerService.findById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(ownerResponse);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<OwnerResponse> updateOwnerById(
+            @PathVariable UUID id,
+            @Valid @RequestBody OwnerUpdateRequest updatedOwner
+    ) {
+        OwnerResponse updatedOwnerResponse = ownerService.updateOwnerById(id, updatedOwner);
+
+        return ResponseEntity.status(HttpStatus.OK).body(updatedOwnerResponse);
     }
 
     /*
