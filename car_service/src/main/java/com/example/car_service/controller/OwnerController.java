@@ -21,7 +21,7 @@ public class OwnerController {
 
     @PostMapping
     public ResponseEntity<OwnerResponse> createOwner(
-           @Valid @RequestBody OwnerCreateRequest request
+            @Valid @RequestBody OwnerCreateRequest request
     ) {
 
         OwnerResponse ownerResponse = ownerService.create(request);
@@ -49,14 +49,12 @@ public class OwnerController {
         return ResponseEntity.status(HttpStatus.OK).body(updatedOwnerResponse);
     }
 
-    /*
-    GET
-    PATCH/PUT
-    DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOwnerById(
+            @PathVariable UUID id
+    ) {
+        ownerService.deleteOwnerById(id);
 
-    1) Написать валидацию входного контракта
-    2) Реализовать ручки по типам запросам
-        GATEWAY глянуть
-     */
-
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

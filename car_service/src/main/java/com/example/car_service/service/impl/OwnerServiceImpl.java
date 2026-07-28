@@ -26,4 +26,9 @@ public class OwnerServiceImpl implements OwnerService {
     public OwnerResponse updateOwnerById(UUID id, OwnerUpdateRequest updatedOwner) {
         return null;
     }
+
+    @Override
+    public void deleteOwnerById(UUID id) {
+
+    }
 }

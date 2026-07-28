@@ -13,4 +13,6 @@ public interface OwnerService {
     OwnerResponse findById(UUID id);
 
     OwnerResponse updateOwnerById(UUID id, OwnerUpdateRequest updatedOwner);
+
+    void deleteOwnerById(UUID id);
 }
