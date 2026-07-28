@@ -3,6 +3,7 @@ package com.example.car_service.controller;
 import com.example.car_service.domain.dto.owner.OwnerCreateRequest;
 import com.example.car_service.domain.dto.owner.OwnerCreateResponse;
 import com.example.car_service.service.OwnerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,7 @@ public class OwnerController {
 
     @PostMapping
     public ResponseEntity<OwnerCreateResponse> createOwner(
-           @RequestBody OwnerCreateRequest request
+           @Valid @RequestBody OwnerCreateRequest request
     ) {
 
         OwnerCreateResponse ownerCreateResponse = ownerService.create(request);
