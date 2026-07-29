@@ -1,11 +1,14 @@
 package com.example.car_service.controller;
 
 import com.example.car_service.domain.dto.owner.OwnerCreateRequest;
+import com.example.car_service.domain.dto.owner.OwnerFilterRequest;
 import com.example.car_service.domain.dto.owner.OwnerResponse;
 import com.example.car_service.domain.dto.owner.OwnerUpdateRequest;
 import com.example.car_service.service.OwnerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,13 +33,24 @@ public class OwnerController {
 
     }
 
+    @PostMapping("/search")
+    public ResponseEntity<Page<OwnerResponse>> findOwnersWithFilter(
+            @Valid @RequestBody OwnerFilterRequest filter,
+            Pageable pageable
+    ) {
+
+        Page<OwnerResponse> ownerResponse = ownerService.findWithFilter(filter, pageable);
+
+        return ResponseEntity.ok(ownerResponse);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<OwnerResponse> getOwnerById(
             @PathVariable UUID id
     ) {
         OwnerResponse ownerResponse = ownerService.findById(id);
 
-        return ResponseEntity.status(HttpStatus.OK).body(ownerResponse);
+        return ResponseEntity.ok(ownerResponse);
     }
 
     @PatchMapping("/{id}")
@@ -46,7 +60,7 @@ public class OwnerController {
     ) {
         OwnerResponse updatedOwnerResponse = ownerService.updateOwnerById(id, updatedOwner);
 
-        return ResponseEntity.status(HttpStatus.OK).body(updatedOwnerResponse);
+        return ResponseEntity.ok(updatedOwnerResponse);
     }
 
     @DeleteMapping("/{id}")
