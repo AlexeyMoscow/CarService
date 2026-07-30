@@ -26,7 +26,7 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public Page<OwnerResponse> findWithFilter(OwnerFilterRequest filter, Pageable pageable) {
-        return null;
+        return Page.empty(pageable);
     }
 
     @Override

@@ -1,14 +1,13 @@
 package com.example.car_service.controller;
 
-import com.example.car_service.domain.dto.owner.OwnerCreateRequest;
-import com.example.car_service.domain.dto.owner.OwnerFilterRequest;
-import com.example.car_service.domain.dto.owner.OwnerResponse;
-import com.example.car_service.domain.dto.owner.OwnerUpdateRequest;
+import com.example.car_service.domain.dto.owner.*;
 import com.example.car_service.service.OwnerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,15 +32,41 @@ public class OwnerController {
 
     }
 
-    @PostMapping("/search")
-    public ResponseEntity<Page<OwnerResponse>> findOwnersWithFilter(
-            @Valid @RequestBody OwnerFilterRequest filter,
-            Pageable pageable
+    @GetMapping
+    public ResponseEntity<OwnerPageResponse> findOwnersWithFilter(
+
+            @Valid @ModelAttribute OwnerFilterRequest filter,
+
+            @RequestParam(defaultValue = "0")
+            int page,
+
+            @RequestParam(defaultValue = "20")
+            int size,
+
+            @RequestParam(defaultValue = "fullName")
+            String sortBy,
+
+            @RequestParam(defaultValue = "asc")
+            String direction
     ) {
+
+        Sort sort = direction.equalsIgnoreCase("asc")
+                ? Sort.by(sortBy).ascending()
+                : Sort.by(sortBy).descending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
 
         Page<OwnerResponse> ownerResponse = ownerService.findWithFilter(filter, pageable);
 
-        return ResponseEntity.ok(ownerResponse);
+        OwnerPageResponse ownerPageResponse = new OwnerPageResponse(
+                ownerResponse.getContent(),
+                ownerResponse.getNumber(),
+                ownerResponse.getSize(),
+                ownerResponse.getTotalElements(),
+                ownerResponse.getTotalPages()
+        );
+
+        return ResponseEntity.ok(ownerPageResponse);
     }
 
     @GetMapping("/{id}")
