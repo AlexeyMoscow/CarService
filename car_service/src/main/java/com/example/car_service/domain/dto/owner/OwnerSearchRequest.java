@@ -58,9 +58,12 @@ public record OwnerSearchRequest(
         )
         String direction
 
-
-
-
-
 ) {
+        private static final int DEFAULT_PAGE = 0;
+        private static final int DEFAULT_SIZE = 20;
+
+        public OwnerSearchRequest {
+                page = page == null ? DEFAULT_PAGE : page;
+                size = size == null ? DEFAULT_SIZE : size;
+        }
 }

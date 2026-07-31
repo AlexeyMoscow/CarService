@@ -4,7 +4,6 @@ import com.example.car_service.domain.dto.owner.*;
 import com.example.car_service.service.OwnerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,17 +33,9 @@ public class OwnerController {
 
             @Valid @ModelAttribute OwnerSearchRequest searchRequest
     ) {
-        Page<OwnerResponse> ownerResponse = ownerService.findWithFilter(searchRequest);
+        OwnerPageResponse ownerResponse = ownerService.findWithFilter(searchRequest);
 
-        OwnerPageResponse ownerPageResponse = new OwnerPageResponse(
-                ownerResponse.getContent(),
-                ownerResponse.getNumber(),
-                ownerResponse.getSize(),
-                ownerResponse.getTotalElements(),
-                ownerResponse.getTotalPages()
-        );
-
-        return ResponseEntity.ok(ownerPageResponse);
+        return ResponseEntity.ok(ownerResponse);
     }
 
     @GetMapping("/{id}")

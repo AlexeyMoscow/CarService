@@ -1,9 +1,6 @@
 package com.example.car_service.service.impl;
 
-import com.example.car_service.domain.dto.owner.OwnerCreateRequest;
-import com.example.car_service.domain.dto.owner.OwnerSearchRequest;
-import com.example.car_service.domain.dto.owner.OwnerResponse;
-import com.example.car_service.domain.dto.owner.OwnerUpdateRequest;
+import com.example.car_service.domain.dto.owner.*;
 import com.example.car_service.service.OwnerService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -24,8 +21,17 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public Page<OwnerResponse> findWithFilter(OwnerSearchRequest filter) {
-        return Page.empty();
+    public OwnerPageResponse findWithFilter(OwnerSearchRequest filter) {
+
+        Page<OwnerResponse> ownersPage = Page.empty();
+
+        return new OwnerPageResponse(
+                ownersPage.getContent(),
+                ownersPage.getNumber(),
+                ownersPage.getSize(),
+                ownersPage.getTotalElements(),
+                ownersPage.getTotalPages()
+        );
     }
 
     @Override
