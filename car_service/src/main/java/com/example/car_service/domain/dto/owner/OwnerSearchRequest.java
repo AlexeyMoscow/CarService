@@ -1,13 +1,10 @@
 package com.example.car_service.domain.dto.owner;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.PastOrPresent;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
-public record OwnerFilterRequest(
+public record OwnerSearchRequest(
 
         @Size(
                 min = 2, max = 100,
@@ -39,8 +36,31 @@ public record OwnerFilterRequest(
         LocalDate updatedFrom,
 
         @PastOrPresent(
-                message = "Updated from must not be in the future")
-        LocalDate updatedTo
+                message = "Updated to must not be in the future")
+        LocalDate updatedTo,
+
+        @Min(value = 0, message = "Page must be greater than or equal to 0")
+        Integer page,
+
+        @Min(value = 1, message = "Size must be greater than or equal to 1")
+        @Max(value = 100, message = "Size must not exceed 100")
+        Integer size,
+
+        @Pattern(
+                regexp = "^(fullName|phone|email|updatedAt)$",
+                message = "Unsupported sorting field"
+        )
+        String sortBy,
+
+        @Pattern(
+                regexp = "(?i)^(asc|desc)$",
+                message = "Direction must be asc or desc"
+        )
+        String direction
+
+
+
+
 
 ) {
 }

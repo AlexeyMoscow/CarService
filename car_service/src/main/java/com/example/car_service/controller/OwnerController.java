@@ -5,9 +5,6 @@ import com.example.car_service.service.OwnerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,28 +32,9 @@ public class OwnerController {
     @GetMapping
     public ResponseEntity<OwnerPageResponse> findOwnersWithFilter(
 
-            @Valid @ModelAttribute OwnerFilterRequest filter,
-
-            @RequestParam(defaultValue = "0")
-            int page,
-
-            @RequestParam(defaultValue = "20")
-            int size,
-
-            @RequestParam(defaultValue = "fullName")
-            String sortBy,
-
-            @RequestParam(defaultValue = "asc")
-            String direction
+            @Valid @ModelAttribute OwnerSearchRequest searchRequest
     ) {
-
-        Sort sort = direction.equalsIgnoreCase("asc")
-                ? Sort.by(sortBy).ascending()
-                : Sort.by(sortBy).descending();
-
-        Pageable pageable = PageRequest.of(page, size, sort);
-
-        Page<OwnerResponse> ownerResponse = ownerService.findWithFilter(filter, pageable);
+        Page<OwnerResponse> ownerResponse = ownerService.findWithFilter(searchRequest);
 
         OwnerPageResponse ownerPageResponse = new OwnerPageResponse(
                 ownerResponse.getContent(),
