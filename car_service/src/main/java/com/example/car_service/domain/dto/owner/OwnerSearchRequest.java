@@ -1,6 +1,9 @@
 package com.example.car_service.domain.dto.owner;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
 
@@ -39,11 +42,8 @@ public record OwnerSearchRequest(
                 message = "Updated to must not be in the future")
         LocalDate updatedTo,
 
-        @Min(value = 0, message = "Page must be greater than or equal to 0")
         Integer page,
 
-        @Min(value = 1, message = "Size must be greater than or equal to 1")
-        @Max(value = 100, message = "Size must not exceed 100")
         Integer size,
 
         @Pattern(
@@ -59,11 +59,11 @@ public record OwnerSearchRequest(
         String direction
 
 ) {
-        private static final int DEFAULT_PAGE = 0;
-        private static final int DEFAULT_SIZE = 20;
 
         public OwnerSearchRequest {
-                page = page == null ? DEFAULT_PAGE : page;
-                size = size == null ? DEFAULT_SIZE : size;
+                page = page == null || page < 0 ? 0 : page;
+                size = size == null || size < 1 || size > 100 ? 20 : size;
+                sortBy = sortBy == null || sortBy.isBlank() ? "fullName": sortBy;
+                direction = direction == null || direction.isBlank() ? "asc": direction;
         }
 }
