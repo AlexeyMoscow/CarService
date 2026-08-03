@@ -6,7 +6,7 @@ import jakarta.validation.Valid;
 import java.util.UUID;
 
 public interface OwnerService {
-    OwnerResponse create(@Valid OwnerCreateRequest request);
+    OwnerResponse create(OwnerCreateRequest request);
 
     OwnerResponse findById(UUID id);
 
