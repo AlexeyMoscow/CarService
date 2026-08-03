@@ -63,7 +63,7 @@ public record OwnerSearchRequest(
         public OwnerSearchRequest {
                 page = page == null || page < 0 ? 0 : page;
                 size = size == null || size < 1 || size > 100 ? 20 : size;
-                sortBy = sortBy == null || sortBy.isBlank() ? "fullName": sortBy;
-                direction = direction == null || direction.isBlank() ? "asc": direction;
+                sortBy = sortBy == null || sortBy.isBlank() ? "fullName" : sortBy;
+                direction = direction == null || direction.isBlank() ? "asc" : direction;
         }
 }
