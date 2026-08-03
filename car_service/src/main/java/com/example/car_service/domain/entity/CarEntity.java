@@ -45,10 +45,10 @@ public class CarEntity {
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
-    private CarOwnerEntity owner;
+    private OwnerEntity owner;
 
     @OneToMany(mappedBy = "car")
-    private List<CarServiceEntity> services;
+    private List<MaintenanceRecordEntity> services;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

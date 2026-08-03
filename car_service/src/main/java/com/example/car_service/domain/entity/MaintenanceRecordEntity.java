@@ -16,7 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "car_services")
-public class CarServiceEntity {
+public class MaintenanceRecordEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

@@ -5,8 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,7 +17,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "car_owners")
-public class CarOwnerEntity {
+public class OwnerEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -32,13 +34,13 @@ public class CarOwnerEntity {
     private String email;
 
     @OneToMany(mappedBy = "owner")
-    private List<CarEntity> cars;
+    private List<CarEntity> cars = new ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "record_created_at")
     private ZonedDateTime recordCreatedAt;
 
-    @CreationTimestamp
+    @UpdateTimestamp
     @Column(name = "record_updated_at")
     private ZonedDateTime recordUpdatedAt;
 }
