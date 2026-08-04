@@ -30,7 +30,7 @@ public class OwnerServiceImpl implements OwnerService {
                 .email(request.email())
                 .build();
 
-        OwnerEntity saved = repository.save(owner);
+        OwnerEntity saved = repository.saveAndFlush(owner);
 
         return ownerMapper.toDto(saved);
     }

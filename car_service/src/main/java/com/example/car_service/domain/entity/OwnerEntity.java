@@ -33,6 +33,7 @@ public class OwnerEntity {
     @Column(name = "email")
     private String email;
 
+    @Builder.Default
     @OneToMany(mappedBy = "owner")
     private List<CarEntity> cars = new ArrayList<>();
 
