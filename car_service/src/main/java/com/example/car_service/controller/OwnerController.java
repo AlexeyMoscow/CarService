@@ -66,6 +66,15 @@ public class OwnerController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @DeleteMapping("/{id}/admin")
+    public ResponseEntity<Void> hardDeleteOwnerById(
+            @PathVariable UUID id
+    ) {
+        ownerService.hardDeleteOwnerById(id);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
     @PatchMapping("/{id}/restore")
     public ResponseEntity<Void> restoreOwnerById(
             @PathVariable UUID id

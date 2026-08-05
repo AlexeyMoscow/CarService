@@ -39,9 +39,7 @@ public class OwnerServiceImpl implements OwnerService {
     @Transactional(readOnly = true)
     public OwnerResponse findById(UUID id) {
 
-        OwnerEntity owner = repository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow( () ->
-                        new RuntimeException("Owner with provided id:" + id + " not found"));
+        OwnerEntity owner = getOwnerEntityById(id);
         return ownerMapper.toDto(owner);
     }
 
@@ -63,14 +61,10 @@ public class OwnerServiceImpl implements OwnerService {
     @Transactional
     public OwnerResponse updateOwnerById(UUID id, OwnerUpdateRequest updatedOwner) {
 
-        OwnerEntity owner = repository.findById(id)
-                .orElseThrow(()->
-                        new RuntimeException("Owner with provided id -" + id + " not found"));
-
+        OwnerEntity owner = getOwnerEntityById(id);
         ownerMapper.updateEntity(updatedOwner, owner);
 
         OwnerEntity saved = repository.saveAndFlush(owner);
-
         return ownerMapper.toDto(saved);
 
     }
@@ -79,13 +73,9 @@ public class OwnerServiceImpl implements OwnerService {
     @Transactional
     public void hardDeleteOwnerById(UUID id) {
 
-        OwnerEntity owner = repository.findById(id)
-                .orElseThrow(()->
-                        new RuntimeException("Owner with provided id -" + id + " not found"));
+        OwnerEntity owner = getOwnerEntityById(id);
 
-        if (!owner.getCars().isEmpty()) {
-            throw new RuntimeException("Owner with linked cars cannot be deactivated");
-        }
+        checkOwnerHasCars(owner);
 
         repository.delete(owner);
     }
@@ -93,25 +83,52 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     @Transactional
     public void softDeleteOwnerById(UUID id) {
-        OwnerEntity owner = repository.findById(id)
-                .orElseThrow( () ->
-                        new RuntimeException("Owner with provided id -" + id + " not found"));
 
-        if (owner.getDeletedAt() != null) {
-            throw new RuntimeException("Owner with provided id " + id + " is already deleted");
-        }
-        if (!owner.getCars().isEmpty()) {
-            throw new RuntimeException("Owner with linked cars cannot be deactivated");
-        }
+        OwnerEntity owner = getOwnerEntityById(id);
+
+        checkOwnerIsDeleted(id, owner);
+        checkOwnerHasCars(owner);
 
         owner.setDeletedAt(ZonedDateTime.now());
     }
 
     @Override
+    @Transactional
     public void restoreOwner(UUID id) {
-        OwnerEntity owner = repository.findById(id)
-                .orElseThrow( () ->
-                        new RuntimeException("Owner with provided id -" + id + " not found"));
+        OwnerEntity owner = getOwnerEntityByIdIncludingDeleted(id);
+
+        checkOwnerCanBeRestored(id, owner);
+
         owner.setDeletedAt(null);
+    }
+
+    private static void checkOwnerHasCars(OwnerEntity owner) {
+        if (!owner.getCars().isEmpty()) {
+            throw new RuntimeException("Owner with linked cars cannot be deactivated");
+        }
+    }
+
+    private static void checkOwnerIsDeleted(UUID id, OwnerEntity owner) {
+        if (owner.getDeletedAt() != null) {
+            throw new RuntimeException("Owner with provided id " + id + " is already deleted");
+        }
+    }
+
+    private static void checkOwnerCanBeRestored(UUID id, OwnerEntity owner) {
+        if (owner.getDeletedAt() == null) {
+            throw new RuntimeException("Owner with provided id " + id + " is not deleted");
+        }
+    }
+
+    private OwnerEntity getOwnerEntityById(UUID id) {
+        return repository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow( () ->
+                        new RuntimeException("Owner with provided id:" + id + " not found"));
+    }
+
+    private OwnerEntity getOwnerEntityByIdIncludingDeleted(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Owner with provided id: " + id + " not found"));
     }
 }
