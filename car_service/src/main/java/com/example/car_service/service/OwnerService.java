@@ -17,4 +17,6 @@ public interface OwnerService {
     void hardDeleteOwnerById(UUID id);
 
     void softDeleteOwnerById(UUID id);
+
+    void restoreOwner(UUID uuid);
 }

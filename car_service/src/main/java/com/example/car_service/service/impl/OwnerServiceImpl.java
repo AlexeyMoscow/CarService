@@ -8,9 +8,9 @@ import com.example.car_service.service.OwnerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Service
@@ -39,7 +39,7 @@ public class OwnerServiceImpl implements OwnerService {
     @Transactional(readOnly = true)
     public OwnerResponse findById(UUID id) {
 
-        OwnerEntity owner = repository.findById(id)
+        OwnerEntity owner = repository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow( () ->
                         new RuntimeException("Owner with provided id:" + id + " not found"));
         return ownerMapper.toDto(owner);
@@ -76,17 +76,42 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
+    @Transactional
     public void hardDeleteOwnerById(UUID id) {
 
         OwnerEntity owner = repository.findById(id)
                 .orElseThrow(()->
                         new RuntimeException("Owner with provided id -" + id + " not found"));
 
+        if (!owner.getCars().isEmpty()) {
+            throw new RuntimeException("Owner with linked cars cannot be deactivated");
+        }
+
         repository.delete(owner);
     }
 
     @Override
+    @Transactional
     public void softDeleteOwnerById(UUID id) {
+        OwnerEntity owner = repository.findById(id)
+                .orElseThrow( () ->
+                        new RuntimeException("Owner with provided id -" + id + " not found"));
 
+        if (owner.getDeletedAt() != null) {
+            throw new RuntimeException("Owner with provided id " + id + " is already deleted");
+        }
+        if (!owner.getCars().isEmpty()) {
+            throw new RuntimeException("Owner with linked cars cannot be deactivated");
+        }
+
+        owner.setDeletedAt(ZonedDateTime.now());
+    }
+
+    @Override
+    public void restoreOwner(UUID id) {
+        OwnerEntity owner = repository.findById(id)
+                .orElseThrow( () ->
+                        new RuntimeException("Owner with provided id -" + id + " not found"));
+        owner.setDeletedAt(null);
     }
 }
