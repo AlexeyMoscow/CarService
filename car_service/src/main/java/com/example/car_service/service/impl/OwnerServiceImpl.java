@@ -36,8 +36,13 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public OwnerResponse findById(UUID id) {
-        return null;
+
+        OwnerEntity owner = repository.findById(id)
+                .orElseThrow( () ->
+                        new RuntimeException("Owner with provided id:" + id + " not found"));
+        return ownerMapper.toDto(owner);
     }
 
     @Override
