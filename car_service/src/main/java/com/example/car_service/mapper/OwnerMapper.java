@@ -1,10 +1,9 @@
 package com.example.car_service.mapper;
 
 import com.example.car_service.domain.dto.owner.OwnerResponse;
+import com.example.car_service.domain.dto.owner.OwnerUpdateRequest;
 import com.example.car_service.domain.entity.OwnerEntity;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
@@ -35,7 +34,12 @@ public interface OwnerMapper {
         return dateTime.truncatedTo(ChronoUnit.MINUTES);
     }
 
-    default String getFullName(OwnerEntity ownerEntity) {
-        return ownerEntity.getFullName();
-    }
+    @BeanMapping(
+            nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE
+    )
+    void updateEntity(
+            OwnerUpdateRequest request,
+            @MappingTarget OwnerEntity entity
+    );
+
 }

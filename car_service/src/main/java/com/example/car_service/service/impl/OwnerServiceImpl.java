@@ -55,8 +55,19 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
+    @Transactional
     public OwnerResponse updateOwnerById(UUID id, OwnerUpdateRequest updatedOwner) {
-        return null;
+
+        OwnerEntity owner = repository.findById(id)
+                .orElseThrow(()->
+                        new RuntimeException("Owner with provided id -" + id + " not found"));
+
+        ownerMapper.updateEntity(updatedOwner, owner);
+
+        OwnerEntity saved = repository.saveAndFlush(owner);
+
+        return ownerMapper.toDto(saved);
+
     }
 
     @Override
