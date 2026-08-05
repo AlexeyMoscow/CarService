@@ -76,7 +76,17 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
-    public void deleteOwnerById(UUID id) {
+    public void hardDeleteOwnerById(UUID id) {
+
+        OwnerEntity owner = repository.findById(id)
+                .orElseThrow(()->
+                        new RuntimeException("Owner with provided id -" + id + " not found"));
+
+        repository.delete(owner);
+    }
+
+    @Override
+    public void softDeleteOwnerById(UUID id) {
 
     }
 }
