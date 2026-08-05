@@ -61,7 +61,7 @@ public class OwnerController {
     public ResponseEntity<Void> deleteOwnerById(
             @PathVariable UUID id
     ) {
-        ownerService.deleteOwnerById(id);
+        ownerService.hardDeleteOwnerById(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

@@ -44,4 +44,7 @@ public class OwnerEntity {
     @UpdateTimestamp
     @Column(name = "record_updated_at")
     private ZonedDateTime recordUpdatedAt;
+
+    @Column(name = "record_deleted_at")
+    private ZonedDateTime deletedAt;
 }
