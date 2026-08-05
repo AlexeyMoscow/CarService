@@ -1,7 +1,6 @@
 package com.example.car_service.service;
 
 import com.example.car_service.domain.dto.owner.*;
-import jakarta.validation.Valid;
 
 import java.util.UUID;
 
