@@ -33,6 +33,7 @@ public class OwnerEntity {
     @Column(name = "email")
     private String email;
 
+    @Builder.Default
     @OneToMany(mappedBy = "owner")
     private List<CarEntity> cars = new ArrayList<>();
 
@@ -43,4 +44,7 @@ public class OwnerEntity {
     @UpdateTimestamp
     @Column(name = "record_updated_at")
     private ZonedDateTime recordUpdatedAt;
+
+    @Column(name = "record_deleted_at")
+    private ZonedDateTime deletedAt;
 }

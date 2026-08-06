@@ -1,7 +1,6 @@
 package com.example.car_service.service;
 
 import com.example.car_service.domain.dto.owner.*;
-import jakarta.validation.Valid;
 
 import java.util.UUID;
 
@@ -14,5 +13,9 @@ public interface OwnerService {
 
     OwnerResponse updateOwnerById(UUID id, OwnerUpdateRequest updatedOwner);
 
-    void deleteOwnerById(UUID id);
+    void hardDeleteOwnerById(UUID id);
+
+    void softDeleteOwnerById(UUID id);
+
+    void restoreOwner(UUID uuid);
 }

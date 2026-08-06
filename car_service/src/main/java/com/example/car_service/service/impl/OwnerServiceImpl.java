@@ -8,9 +8,9 @@ import com.example.car_service.service.OwnerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 @Service
@@ -30,14 +30,17 @@ public class OwnerServiceImpl implements OwnerService {
                 .email(request.email())
                 .build();
 
-        OwnerEntity saved = repository.save(owner);
+        OwnerEntity saved = repository.saveAndFlush(owner);
 
         return ownerMapper.toDto(saved);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public OwnerResponse findById(UUID id) {
-        return null;
+
+        OwnerEntity owner = getActiveOwnerEntityById(id);
+        return ownerMapper.toDto(owner);
     }
 
     @Override
@@ -55,12 +58,77 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
+    @Transactional
     public OwnerResponse updateOwnerById(UUID id, OwnerUpdateRequest updatedOwner) {
-        return null;
+
+        OwnerEntity owner = getActiveOwnerEntityById(id);
+        ownerMapper.updateEntity(updatedOwner, owner);
+
+        OwnerEntity saved = repository.saveAndFlush(owner);
+        return ownerMapper.toDto(saved);
+
     }
 
     @Override
-    public void deleteOwnerById(UUID id) {
+    @Transactional
+    public void hardDeleteOwnerById(UUID id) {
 
+        OwnerEntity owner = getOwnerEntityByIdIncludingDeleted(id);
+
+        checkOwnerHasCars(owner);
+
+        repository.delete(owner);
+    }
+
+    @Override
+    @Transactional
+    public void softDeleteOwnerById(UUID id) {
+
+        OwnerEntity owner = getOwnerEntityByIdIncludingDeleted(id);
+
+        checkOwnerCanBeSoftDeleted(id, owner);
+        checkOwnerHasCars(owner);
+
+        owner.setDeletedAt(ZonedDateTime.now());
+    }
+
+    @Override
+    @Transactional
+    public void restoreOwner(UUID id) {
+        OwnerEntity owner = getOwnerEntityByIdIncludingDeleted(id);
+
+        checkOwnerCanBeRestored(id, owner);
+
+        owner.setDeletedAt(null);
+    }
+
+    private static void checkOwnerHasCars(OwnerEntity owner) {
+        if (!owner.getCars().isEmpty()) {
+            throw new RuntimeException("Owner with linked cars cannot be deleted");
+        }
+    }
+
+    private static void checkOwnerCanBeSoftDeleted(UUID id, OwnerEntity owner) {
+        if (owner.getDeletedAt() != null) {
+            throw new RuntimeException("Owner with provided id " + id + " is already deleted");
+        }
+    }
+
+    private static void checkOwnerCanBeRestored(UUID id, OwnerEntity owner) {
+        if (owner.getDeletedAt() == null) {
+            throw new RuntimeException("Owner with provided id " + id + " is not deleted");
+        }
+    }
+
+    private OwnerEntity getActiveOwnerEntityById(UUID id) {
+        return repository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow( () ->
+                        new RuntimeException("Owner with provided id:" + id + " not found"));
+    }
+
+    private OwnerEntity getOwnerEntityByIdIncludingDeleted(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() ->
+                        new RuntimeException("Owner with provided id: " + id + " not found"));
     }
 }
