@@ -39,7 +39,7 @@ public class OwnerServiceImpl implements OwnerService {
     @Transactional(readOnly = true)
     public OwnerResponse findById(UUID id) {
 
-        OwnerEntity owner = getOwnerEntityById(id);
+        OwnerEntity owner = getActiveOwnerEntityById(id);
         return ownerMapper.toDto(owner);
     }
 
@@ -61,7 +61,7 @@ public class OwnerServiceImpl implements OwnerService {
     @Transactional
     public OwnerResponse updateOwnerById(UUID id, OwnerUpdateRequest updatedOwner) {
 
-        OwnerEntity owner = getOwnerEntityById(id);
+        OwnerEntity owner = getActiveOwnerEntityById(id);
         ownerMapper.updateEntity(updatedOwner, owner);
 
         OwnerEntity saved = repository.saveAndFlush(owner);
@@ -73,7 +73,7 @@ public class OwnerServiceImpl implements OwnerService {
     @Transactional
     public void hardDeleteOwnerById(UUID id) {
 
-        OwnerEntity owner = getOwnerEntityById(id);
+        OwnerEntity owner = getOwnerEntityByIdIncludingDeleted(id);
 
         checkOwnerHasCars(owner);
 
@@ -84,9 +84,9 @@ public class OwnerServiceImpl implements OwnerService {
     @Transactional
     public void softDeleteOwnerById(UUID id) {
 
-        OwnerEntity owner = getOwnerEntityById(id);
+        OwnerEntity owner = getOwnerEntityByIdIncludingDeleted(id);
 
-        checkOwnerIsDeleted(id, owner);
+        checkOwnerCanBeSoftDeleted(id, owner);
         checkOwnerHasCars(owner);
 
         owner.setDeletedAt(ZonedDateTime.now());
@@ -104,11 +104,11 @@ public class OwnerServiceImpl implements OwnerService {
 
     private static void checkOwnerHasCars(OwnerEntity owner) {
         if (!owner.getCars().isEmpty()) {
-            throw new RuntimeException("Owner with linked cars cannot be deactivated");
+            throw new RuntimeException("Owner with linked cars cannot be deleted");
         }
     }
 
-    private static void checkOwnerIsDeleted(UUID id, OwnerEntity owner) {
+    private static void checkOwnerCanBeSoftDeleted(UUID id, OwnerEntity owner) {
         if (owner.getDeletedAt() != null) {
             throw new RuntimeException("Owner with provided id " + id + " is already deleted");
         }
@@ -120,7 +120,7 @@ public class OwnerServiceImpl implements OwnerService {
         }
     }
 
-    private OwnerEntity getOwnerEntityById(UUID id) {
+    private OwnerEntity getActiveOwnerEntityById(UUID id) {
         return repository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow( () ->
                         new RuntimeException("Owner with provided id:" + id + " not found"));
