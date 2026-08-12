@@ -5,8 +5,13 @@ import com.example.car_service.domain.entity.OwnerEntity;
 import com.example.car_service.mapper.OwnerMapper;
 import com.example.car_service.repository.OwnerRepository;
 import com.example.car_service.service.OwnerService;
+import com.example.car_service.util.OwnerSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,12 +49,30 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public OwnerPageResponse findWithFilter(OwnerSearchRequest filter) {
 
-        Page<OwnerResponse> ownersPage = Page.empty();
+        Pageable pageable = PageRequest.of(
+                filter.page(),
+                filter.size(),
+                Sort.by(Sort.Direction.fromString(filter.direction()),
+                        filter.sortBy())
+        );
+
+        Specification<OwnerEntity> specification = OwnerSpecification.ownerSpecification(
+                filter.owners(),
+                filter.phone(),
+                filter.email(),
+                filter.createdFrom(),
+                filter.createdTo(),
+                filter.updatedFrom(),
+                filter.updatedTo()
+        );
+
+        Page<OwnerEntity> ownersPage = repository.findAll(specification, pageable);
 
         return new OwnerPageResponse(
-                ownersPage.getContent(),
+                ownersPage.getContent().stream().map(ownerMapper::toDto).toList(),
                 ownersPage.getNumber(),
                 ownersPage.getSize(),
                 ownersPage.getTotalElements(),

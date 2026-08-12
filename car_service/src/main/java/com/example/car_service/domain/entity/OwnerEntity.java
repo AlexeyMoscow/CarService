@@ -2,6 +2,7 @@ package com.example.car_service.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -35,6 +36,7 @@ public class OwnerEntity {
 
     @Builder.Default
     @OneToMany(mappedBy = "owner")
+    @BatchSize(size = 50)
     private List<CarEntity> cars = new ArrayList<>();
 
     @CreationTimestamp
