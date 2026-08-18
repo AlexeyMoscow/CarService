@@ -6,17 +6,11 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public record OwnerSearchRequest(
 
-        @Size(
-                min = 2, max = 100,
-                message = "Full name must contain from 2 to 100 characters")
-        @Pattern(
-                regexp = ".*\\S.*",
-                message = "Full name must not be blank"
-        )
-        String fullName,
+        List<String> owners,
 
 
         @Pattern(
@@ -33,6 +27,14 @@ public record OwnerSearchRequest(
                 message = "Email must not be blank"
         )
         String email,
+
+        @PastOrPresent(
+                message = "Created from must not be in the future")
+        LocalDate createdFrom,
+
+        @PastOrPresent(
+                message = "CreatedTo must not be in the future")
+        LocalDate createdTo,
 
         @PastOrPresent(
                 message = "Updated from must not be in the future")
