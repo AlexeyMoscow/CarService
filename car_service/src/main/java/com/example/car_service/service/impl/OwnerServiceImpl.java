@@ -2,11 +2,15 @@ package com.example.car_service.service.impl;
 
 import com.example.car_service.domain.dto.owner.*;
 import com.example.car_service.domain.entity.OwnerEntity;
+import com.example.car_service.exception.OwnerBusinessException;
 import com.example.car_service.mapper.OwnerMapper;
 import com.example.car_service.repository.OwnerRepository;
 import com.example.car_service.service.OwnerService;
 import com.example.car_service.util.OwnerSpecification;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +24,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OwnerServiceImpl implements OwnerService {
 
     private final OwnerRepository repository;
@@ -35,9 +40,18 @@ public class OwnerServiceImpl implements OwnerService {
                 .email(request.email())
                 .build();
 
-        OwnerEntity saved = repository.saveAndFlush(owner);
+        try {
+            throw new DataAccessResourceFailureException("Ошибка БД");
 
-        return ownerMapper.toDto(saved);
+         //   owner = repository.saveAndFlush(owner);
+        } catch (RuntimeException e) {
+            log.error("Здесь выпала ошибка: {}", e.getMessage(), e);
+            throw new OwnerBusinessException("Ошибка взаимодействия с БД");
+        }
+
+       // log.debug("Сущность создана: {}", owner.getId());
+
+      //  return ownerMapper.toDto(owner);
     }
 
     @Override
